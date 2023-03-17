@@ -10,6 +10,123 @@ CREATE TABLE IF NOT EXISTS company (
   edited_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS "assets" (
+  "asset_id" SERIAL PRIMARY KEY NOT NULL,
+  "name" VARCHAR(50) NOT NULL,
+  "type" VARCHAR(50) NOT NULL,
+  "year_acquired" INT,
+  "value" NUMERIC(10, 2),
+  "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- create the crops_sale table
+CREATE TABLE IF NOT EXISTS "crops_sale" (
+  "sale_id" SERIAL PRIMARY KEY NOT NULL,
+  "crop_id" INT NOT NULL,
+  "buyer_id" INT NOT NULL,
+  "date" DATE NOT NULL,
+  "price_per_ton" NUMERIC(10, 2),
+  "net_weight_kg" NUMERIC(10, 2),
+  "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- create the crops_supplies table
+CREATE TABLE IF NOT EXISTS "crops_supplies" (
+  "supply_id" SERIAL PRIMARY KEY NOT NULL,
+  "crop_id" INT NOT NULL,
+  "supplier_id" INT NOT NULL,
+  "date" DATE NOT NULL,
+  "price_per_ton" NUMERIC(10, 2),
+  "net_weight_kg" NUMERIC(10, 2),
+  "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE employees (
+  employee_id SERIAL PRIMARY KEY,
+  farm_id INT NOT NULL,
+  edited_by_user_id INT NOT NULL,
+  employee_name VARCHAR(50) NOT NULL,
+  function_name VARCHAR(50),
+  gross_salary NUMERIC,
+  commission_soybean VARCHAR(50),
+  value_soybean VARCHAR(50),
+  commission_corn VARCHAR(50),
+  value_corn VARCHAR(50),
+  total_annual NUMERIC,
+  total_monthly NUMERIC,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  edited_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  active BOOLEAN NOT NULL DEFAULT true
+);
+
+-- create the farm_data table
+CREATE TABLE farm_data (
+  data_id SERIAL PRIMARY KEY,
+  farm_id INT NOT NULL,
+  data_type VARCHAR(50) NOT NULL,
+  data_name VARCHAR(50),
+  data_value VARCHAR(250) NOT NULL,
+  data_value_complement VARCHAR(250) NOT NULL,
+  edited_by_user_id INT NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  edited_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  active BOOLEAN NOT NULL DEFAULT true
+);
+
+-- create the farms table
+CREATE TABLE farms (
+  farm_id SERIAL PRIMARY KEY,
+  company_id INT NOT NULL,
+  edited_by_user_id INT NOT NULL,
+  farm_name VARCHAR(50) NOT NULL,
+  inscricao_estadual INT,
+  area INT,
+  address VARCHAR(250),
+  state VARCHAR(50),
+  farm_type INT NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  edited_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  active BOOLEAN NOT NULL DEFAULT true
+);
+
+CREATE TABLE IF NOT EXISTS harvest (
+  harvest_id serial PRIMARY KEY,
+  farm_id int NOT NULL,
+  tax_type varchar(50),
+  agricultural_year varchar(50) NOT NULL,
+  area int,
+  grain varchar(50) NOT NULL,
+  edited_by_user_id int NOT NULL,
+  created_date timestamp with time zone DEFAULT now(),
+  edited_date timestamp with time zone DEFAULT now(),
+  active boolean NOT NULL DEFAULT true,
+  FOREIGN KEY (farm_id) REFERENCES farms(farm_id) ON DELETE CASCADE
+);
+
+-- create the suppliers table
+CREATE TABLE IF NOT EXISTS suppliers (
+  supplier_id serial PRIMARY KEY,
+  supplier_name varchar(50) NOT NULL,
+  supplier_type varchar(50) NOT NULL,
+  contact_name varchar(50),
+  address varchar(250),
+  city varchar(50),
+  state varchar(50),
+  country varchar(50),
+  zip_code varchar(20),
+  phone varchar(20),
+  email varchar(100),
+  website varchar(100),
+  tax_id varchar(50),
+  notes varchar(500),
+  created_date timestamp with time zone DEFAULT now(),
+  edited_date timestamp with time zone DEFAULT now(),
+  active boolean NOT NULL DEFAULT true
+);
+
 -- create the roles table
 CREATE TABLE IF NOT EXISTS roles (
   role_id SERIAL PRIMARY KEY,
