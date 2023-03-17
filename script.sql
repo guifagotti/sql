@@ -1,442 +1,250 @@
-CREATE TABLE "company" (
-  "companyID" int4 PRIMARY KEY NOT NULL DEFAULT (nextval('company_id_seq'::regclass)),
-  "companyName" varchar(50) NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "mail" varchar(50) NOT NULL,
-  "phone" varchar(50) NOT NULL,
-  "active" bool NOT NULL DEFAULT 1,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL
+-- create the company table
+CREATE TABLE companies (
+  company_id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  edited_by_user_id INT NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  active BOOLEAN NOT NULL DEFAULT true,
+  created_date TIMESTAMP WITH TIME ZONE NOT NULL,
+  edited_date TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
-CREATE TABLE "crops" (
-  "cropsID" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "safraID" int4,
-  "date" date NOT NULL,
-  "talhao" varchar(50),
-  "ie" varchar(50),
-  "ticket" numeric,
-  "netweight" numeric,
-  "impurity" varchar(50),
-  "moisture" varchar(50),
-  "driver" varchar(50),
-  "licenseplate" varchar(50),
-  "shippingcost" numeric,
-  "producerID" int4,
-  "receiver" varchar(50),
-  "storageID" int4,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "totalDiscount" varchar,
-  "netWeightDiscountKg" varchar,
-  "netWeightDiscountSc" varchar,
-  "talhaoID" int4,
-  "active" bool NOT NULL DEFAULT 1
+-- create the crop table
+CREATE TABLE crops (
+  crop_id SERIAL PRIMARY KEY,
+  farm_id INT NOT NULL,
+  edited_by_user_id INT NOT NULL,
+  harvest_id INT,
+  date DATE NOT NULL,
+  talhao VARCHAR(50),
+  ie VARCHAR(50),
+  ticket NUMERIC,
+  net_weight NUMERIC,
+  impurity VARCHAR(50),
+  moisture VARCHAR(50),
+  driver VARCHAR(50),
+  license_plate VARCHAR(50),
+  shipping_cost NUMERIC,
+  producer_id INT,
+  receiver VARCHAR(50),
+  storage_id INT,
+  created_date TIMESTAMP WITH TIME ZONE NOT NULL,
+  edited_date TIMESTAMP WITH TIME ZONE NOT NULL,
+  total_discount VARCHAR,
+  net_weight_discount_kg VARCHAR,
+  net_weight_discount_sc VARCHAR,
+  talhao_id INT,
+  active BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE "roles" (
-  "roleID" serial4 PRIMARY KEY NOT NULL,
-  "roleName" varchar(50) NOT NULL,
-  "page1" bit(1) NOT NULL,
-  "page2" bit(1) NOT NULL
+-- create the role table
+CREATE TABLE roles (
+  role_id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  page1 BOOLEAN NOT NULL,
+  page2 BOOLEAN NOT NULL
 );
 
-CREATE TABLE "user" (
-  "userID" serial4 PRIMARY KEY NOT NULL,
-  "companyID" int4 NOT NULL,
-  "roleID" int4 NOT NULL,
-  "name" varchar(100) NOT NULL,
-  "mail" varchar(100) NOT NULL,
-  "phone" varchar(50) NOT NULL,
-  "pass" varchar(5000) NOT NULL,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "passwordsalt" varchar(5000) NOT NULL,
-  "verified" bool NOT NULL,
-  "mailToken" varchar(5000),
-  "mailTokenData" timestamptz,
-  "active" bool NOT NULL DEFAULT false,
-  "accountStatus" int4 NOT NULL DEFAULT 0
+-- create the user table
+CREATE TABLE users (
+  user_id SERIAL PRIMARY KEY,
+  company_id INT NOT NULL,
+  role_id INT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  password VARCHAR(5000) NOT NULL,
+  created_date TIMESTAMP WITH TIME ZONE NOT NULL,
+  edited_date TIMESTAMP WITH TIME ZONE NOT NULL,
+  password_salt VARCHAR(5000) NOT NULL,
+  verified BOOLEAN NOT NULL,
+  mail_token VARCHAR(5000),
+  mail_token_data TIMESTAMP WITH TIME ZONE,
+  active BOOLEAN NOT NULL DEFAULT false,
+  account_status INT NOT NULL DEFAULT 0
 );
 
-CREATE TABLE "farm" (
-  "farmID" serial4 PRIMARY KEY NOT NULL,
-  "companyID" int4 NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "farmName" varchar(50) NOT NULL,
-  "inscricaoEstadual" int8,
-  "area" int4,
-  "address" varchar(250),
-  "state" varchar(50),
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "farmType" int4 NOT NULL,
-  "active" bool NOT NULL DEFAULT 1
+-- create the farm table
+CREATE TABLE farms (
+farm_id SERIAL PRIMARY KEY,
+farm_name VARCHAR(50) NOT NULL,
+company_id INT NOT NULL,
+state VARCHAR(50),
+city VARCHAR(50),
+address VARCHAR(250),
+zipcode VARCHAR(10),
+created_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_by_user_id INT NOT NULL,
+farm_type_id INT NOT NULL,
+active BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE "farm_data" (
-  "dataID" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "dataType" varchar(50) NOT NULL,
-  "dataName" varchar(50),
-  "dataValue" varchar(250) NOT NULL,
-  "dataValueComplement" varchar(250) NOT NULL,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "active" bool NOT NULL DEFAULT 1
+-- create the farm types table
+CREATE TABLE farm_types (
+farm_type_id SERIAL PRIMARY KEY,
+farm_type_name VARCHAR(50) NOT NULL,
+created_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_by_user_id INT NOT NULL,
+active BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE "harvest" (
-  "safraID" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "taxType" varchar,
-  "agriculturalYear" varchar(50) NOT NULL,
-  "area" int4,
-  "grain" varchar(50) NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "active" bool NOT NULL DEFAULT 1
+-- create the crops table
+CREATE TABLE crops (
+crop_id SERIAL PRIMARY KEY,
+crop_name VARCHAR(50) NOT NULL,
+farm_id INT NOT NULL,
+created_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_by_user_id INT NOT NULL,
+active BOOLEAN NOT NULL DEFAULT true,
+FOREIGN KEY (farm_id) REFERENCES farms(farm_id)
 );
 
-CREATE TABLE "assets" (
-  "assetsID" serial4 PRIMARY KEY NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "safraID" int4,
-  "type" varchar(50) NOT NULL,
-  "typeMachine" varchar(50),
-  "capacity" varchar(50),
-  "model" varchar(50),
-  "manufacturer" varchar(50),
-  "yearManufacture" varchar(50),
-  "yearAcquisition" varchar(50),
-  "currentValue" numeric,
-  "obs" varchar(50),
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "depreciation" numeric NOT NULL,
-  "agriculturalYear" varchar(20),
-  "active" bool NOT NULL DEFAULT 1
+-- create the units table
+CREATE TABLE units (
+unit_id SERIAL PRIMARY KEY,
+unit_name VARCHAR(50) NOT NULL,
+created_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_by_user_id INT NOT NULL,
+active BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE "employees" (
-  "employeesID" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "employee" varchar(50),
-  "function" varchar(50),
-  "grossSalary" numeric,
-  "commissionSoybean" varchar(50),
-  "valueSoybean" varchar(50),
-  "commissioncorn" varchar(50),
-  "valueCorn" varchar(50),
-  "totalAnnual" numeric,
-  "totalMonthly" numeric,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "active" bool NOT NULL DEFAULT 1
+-- create the crops_units table
+CREATE TABLE crops_units (
+crop_id INT NOT NULL,
+unit_id INT NOT NULL,
+created_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_by_user_id INT NOT NULL,
+active BOOLEAN NOT NULL DEFAULT true,
+FOREIGN KEY (crop_id) REFERENCES crops(crop_id),
+FOREIGN KEY (unit_id) REFERENCES units(unit_id)
 );
 
-CREATE TABLE "inputs_Expenses" (
-  "id" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "date" date NOT NULL,
-  "safraID" int4,
-  "agriculturalYear" varchar(20),
-  "producerID" int4,
-  "orderNumber" numeric,
-  "invoiceNumber" varchar(50),
-  "supplier" varchar(50),
-  "category" varchar(50) NOT NULL,
-  "description" varchar(50),
-  "quantity" int4,
-  "unity" varchar(50),
-  "value" numeric NOT NULL,
-  "dueDate" date,
-  "paymentDate" date,
-  "paid" bool,
-  "editedByUserID" int4 NOT NULL,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "active" bool NOT NULL DEFAULT 1
+-- create the activities table
+CREATE TABLE activities (
+activity_id SERIAL PRIMARY KEY,
+activity_name VARCHAR(50) NOT NULL,
+crop_id INT NOT NULL,
+created_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_by_user_id INT NOT NULL,
+active BOOLEAN NOT NULL DEFAULT true,
+FOREIGN KEY (crop_id) REFERENCES crops(crop_id)
 );
 
-CREATE TABLE "operational_Expenses" (
-  "id" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "date" date NOT NULL,
-  "producerID" int4,
-  "orderNumber" numeric,
-  "invoiceNumber" varchar(50),
-  "supplier" varchar(50),
-  "category" varchar(50) NOT NULL,
-  "description" varchar(50),
-  "quantity" int4,
-  "unity" varchar(50),
-  "value" numeric NOT NULL,
-  "dueDate" date,
-  "paymentDate" date,
-  "paid" bool,
-  "unitCost" varchar(20),
-  "editedByUserID" int4 NOT NULL,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "agriculturalYear" varchar(20),
-  "active" bool NOT NULL DEFAULT 1
+-- create the activity types table
+CREATE TABLE activity_types (
+activity_type_id SERIAL PRIMARY KEY,
+activity_type_name VARCHAR(50) NOT NULL,
+created_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_by_user_id INT NOT NULL,
+active BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE "expenses_loans" (
-  "inputID" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "date" date NOT NULL,
-  "agriculturalYear" varchar(20),
-  "producerID" int4 NOT NULL,
-  "category" varchar(50) NOT NULL,
-  "description" varchar(50),
-  "contractNumber" varchar(50),
-  "creditor" varchar(50),
-  "mainValue" numeric NOT NULL,
-  "fees" numeric NOT NULL,
-  "interestperiod" varchar(20) NOT NULL,
-  "amortizationAmount" numeric NOT NULL,
-  "dueDate" date NOT NULL,
-  "paymentAmount" numeric,
-  "paymentDate" date,
-  "paymentStatus" bool,
-  "realInterest" numeric,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "type" int4 NOT NULL,
-  "active" bool NOT NULL DEFAULT 1
+-- create the activities_types table
+CREATE TABLE activities_types (
+activity_id INT NOT NULL,
+activity_type_id INT NOT NULL,
+created_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_by_user_id INT NOT NULL,
+active BOOLEAN NOT NULL DEFAULT true,
+FOREIGN KEY (activity_id) REFERENCES activities(activity_id),
+FOREIGN KEY (activity_type_id) REFERENCES activity_types(activity_type_id)
 );
 
-CREATE TABLE "input_orders" (
-  "inputID" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "safraID" int4,
-  "date" date NOT NULL,
-  "agriculturalYear" varchar(20),
-  "producerID" int4,
-  "storageID" int4,
-  "orderNumber" varchar(50) NOT NULL,
-  "provider" varchar(50),
-  "category" varchar(50) NOT NULL,
-  "inputDescription" varchar(50),
-  "quantity" int4 NOT NULL,
-  "unit" varchar(50) NOT NULL,
-  "price" numeric NOT NULL,
-  "paymentDate" date,
-  "amountReceived" numeric,
-  "deliveryDate" date,
-  "unitCost" numeric,
-  "balanceReceivable" numeric,
-  "receiptStatus" bool,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "grain" varchar(50),
-  "type" int4 NOT NULL,
-  "active" bool NOT NULL DEFAULT 1
+-- create the supplies table
+CREATE TABLE supplies (
+supply_id SERIAL PRIMARY KEY,
+supply_name VARCHAR(50) NOT NULL,
+created_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_date TIMESTAMP NOT NULL DEFAULT NOW(),
+edited_by_user_id INT NOT NULL,
+active BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE "leases" (
-  "leasesID" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "editedByUserID" int4 NOT NULL,
-  "safraID" int4,
-  "agriculturalYear" varchar(20),
-  "producerID" int4,
-  "lessor" varchar NOT NULL,
-  "area" int4 NOT NULL,
-  "cornLease" numeric,
-  "soyLease" numeric,
-  "contractExpirationDate" date NOT NULL,
-  "totalSoy" varchar,
-  "totalCorn" varchar,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "type" int4 NOT NULL,
-  "active" bool NOT NULL DEFAULT 1
+-- create the crops_supplies table
+CREATE TABLE crops_supplies (
+  crops_supplies_id SERIAL PRIMARY KEY,
+  crop_id INTEGER NOT NULL,
+  supply_id INTEGER NOT NULL,
+  quantity NUMERIC NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_crop
+    FOREIGN KEY (crop_id)
+    REFERENCES crops (crop_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_supply
+    FOREIGN KEY (supply_id)
+    REFERENCES supplies (supply_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
-CREATE TABLE "revenues_grain" (
-  "revenuesID" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "type" int4 NOT NULL,
-  "date" date NOT NULL,
-  "finality" varchar(50),
-  "talhao" varchar(50),
-  "ie" varchar(50),
-  "ticket" numeric,
-  "netweight" numeric,
-  "impurity" varchar(50),
-  "moisture" varchar(50),
-  "driver" varchar(50),
-  "licenseplate" varchar(50),
-  "shippingcost" numeric,
-  "producerID" int4,
-  "receiver" varchar(50),
-  "storageID" int4,
-  "quantity" int4,
-  "price" numeric,
-  "deliveryDate" date,
-  "receivingDate" date,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL,
-  "priceScLiq" varchar,
-  "revenueLiq" varchar,
-  "talhaoID" int4,
-  "active" bool NOT NULL DEFAULT 1
+-- create the users table
+CREATE TABLE users (
+  user_id SERIAL PRIMARY KEY,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "revenues_asset" (
-  "revenuesID" serial4 PRIMARY KEY NOT NULL,
-  "farmID" int4 NOT NULL,
-  "producerID" int4 NOT NULL,
-  "safraID" varchar(20) NOT NULL,
-  "category" varchar(50) NOT NULL,
-  "description" varchar(50),
-  "buyerPayer" varchar(50),
-  "dateAgreed" date,
-  "receiptAmount" numeric NOT NULL,
-  "date" date NOT NULL,
-  "receivingDate" date,
-  "obs" varchar(50),
-  "receiptStatus" bool NOT NULL,
-  "active" bool NOT NULL DEFAULT 1,
-  "editedByUserID" int4 NOT NULL,
-  "createdDate" timestamptz NOT NULL,
-  "editedDate" timestamptz NOT NULL
+-- create the sessions table
+CREATE TABLE sessions (
+  session_id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  token VARCHAR(100) NOT NULL,
+  expiration TIMESTAMP NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_user
+    FOREIGN KEY (user_id)
+    REFERENCES users (user_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
-CREATE INDEX "FK_159_2" ON "crops" USING BTREE ("editedByUserID");
+-- create the orders table
+CREATE TABLE orders (
+  order_id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  order_total NUMERIC NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_user
+    FOREIGN KEY (user_id)
+    REFERENCES users (user_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
 
-CREATE INDEX "FK_74_2" ON "crops" USING BTREE ("farmID");
-
-CREATE INDEX "FK_77_2" ON "crops" USING BTREE ("safraID");
-
-CREATE INDEX "FK_25" ON "user" USING BTREE ("companyID");
-
-CREATE INDEX "FK_61" ON "user" USING BTREE ("roleID");
-
-CREATE INDEX "FK_151" ON "farm" USING BTREE ("editedByUserID");
-
-CREATE INDEX "FK_70" ON "farm" USING BTREE ("companyID");
-
-CREATE INDEX "FK_176" ON "assets" USING BTREE ("editedByUserID");
-
-CREATE INDEX "FK_82" ON "assets" USING BTREE ("safraID");
-
-CREATE INDEX "FK_146" ON "employees" USING BTREE ("editedByUserID");
-
-CREATE INDEX "FK_41" ON "employees" USING BTREE ("farmID");
-
-CREATE INDEX "FK_157" ON "inputs_Expenses" USING BTREE ("editedByUserID");
-
-CREATE INDEX "FK_94" ON "inputs_Expenses" USING BTREE ("farmID");
-
-CREATE INDEX "FK_97" ON "inputs_Expenses" USING BTREE ("safraID");
-
-CREATE INDEX "FK_157" ON "operational_Expenses" USING BTREE ("editedByUserID");
-
-CREATE INDEX "FK_94" ON "operational_Expenses" USING BTREE ("farmID");
-
-CREATE INDEX "FK_624" ON "expenses_loans" USING BTREE ("farmID");
-
-CREATE INDEX "FK_739" ON "expenses_loans" USING BTREE ("editedByUserID");
-
-CREATE INDEX "FK_577" ON "input_orders" USING BTREE ("safraID");
-
-CREATE INDEX "FK_674" ON "input_orders" USING BTREE ("farmID");
-
-CREATE INDEX "FK_759" ON "input_orders" USING BTREE ("editedByUserID");
-
-CREATE INDEX "FK_259" ON "leases" USING BTREE ("editedByUserID");
-
-CREATE INDEX "FK_274" ON "leases" USING BTREE ("farmID");
-
-CREATE INDEX "FK_277" ON "leases" USING BTREE ("safraID");
-
-CREATE INDEX "FK_159" ON "revenues_asset" USING BTREE ("editedByUserID");
-
-CREATE INDEX "FK_74" ON "revenues_asset" USING BTREE ("farmID");
-
-ALTER TABLE "user" ADD CONSTRAINT "FK_23" FOREIGN KEY ("companyID") REFERENCES "company" ("companyID");
-
-ALTER TABLE "user" ADD CONSTRAINT "FK_59" FOREIGN KEY ("roleID") REFERENCES "roles" ("roleID");
-
-ALTER TABLE "farm" ADD CONSTRAINT "FK_68" FOREIGN KEY ("companyID") REFERENCES "company" ("companyID");
-
-ALTER TABLE "farm" ADD CONSTRAINT "FK_149" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "farm_data" ADD CONSTRAINT "FK_163" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "farm_data" ADD CONSTRAINT "FK_188" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "harvest" ADD CONSTRAINT "FK_83" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "harvest" ADD CONSTRAINT "FK_146" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "assets" ADD CONSTRAINT "FK_85" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "assets" ADD CONSTRAINT "FK_65" FOREIGN KEY ("safraID") REFERENCES "harvest" ("safraID");
-
-ALTER TABLE "employees" ADD CONSTRAINT "FK_56" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "employees" ADD CONSTRAINT "FK_86" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "operational_Expenses" ADD CONSTRAINT "FK_92" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "operational_Expenses" ADD CONSTRAINT "FK_155" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "operational_Expenses" ADD CONSTRAINT "FK_377" FOREIGN KEY ("producerID") REFERENCES "farm_data" ("dataID");
-
-ALTER TABLE "inputs_Expenses" ADD CONSTRAINT "FK_92" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "inputs_Expenses" ADD CONSTRAINT "FK_155" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "inputs_Expenses" ADD CONSTRAINT "FK_95" FOREIGN KEY ("safraID") REFERENCES "harvest" ("safraID");
-
-ALTER TABLE "inputs_Expenses" ADD CONSTRAINT "FK_377" FOREIGN KEY ("producerID") REFERENCES "farm_data" ("dataID");
-
-ALTER TABLE "expenses_loans" ADD CONSTRAINT "FK_812" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "expenses_loans" ADD CONSTRAINT "FK_765" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "expenses_loans" ADD CONSTRAINT "FK_837" FOREIGN KEY ("producerID") REFERENCES "farm_data" ("dataID");
-
-ALTER TABLE "input_orders" ADD CONSTRAINT "FK_872" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "input_orders" ADD CONSTRAINT "FK_775" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "input_orders" ADD CONSTRAINT "FK_975" FOREIGN KEY ("safraID") REFERENCES "harvest" ("safraID");
-
-ALTER TABLE "input_orders" ADD CONSTRAINT "FK_877" FOREIGN KEY ("producerID") REFERENCES "farm_data" ("dataID");
-
-ALTER TABLE "input_orders" ADD CONSTRAINT "FK_978" FOREIGN KEY ("storageID") REFERENCES "farm_data" ("dataID");
-
-ALTER TABLE "leases" ADD CONSTRAINT "FK_212" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "leases" ADD CONSTRAINT "FK_225" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "leases" ADD CONSTRAINT "FK_215" FOREIGN KEY ("safraID") REFERENCES "harvest" ("safraID");
-
-ALTER TABLE "leases" ADD CONSTRAINT "FK_217" FOREIGN KEY ("producerID") REFERENCES "farm_data" ("dataID");
-
-ALTER TABLE "revenues_grain" ADD CONSTRAINT "FK_272" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "revenues_grain" ADD CONSTRAINT "FK_477" FOREIGN KEY ("producerID") REFERENCES "farm_data" ("dataID");
-
-ALTER TABLE "revenues_grain" ADD CONSTRAINT "FK_778" FOREIGN KEY ("storageID") REFERENCES "farm_data" ("dataID");
-
-ALTER TABLE "revenues_grain" ADD CONSTRAINT "FK_8978" FOREIGN KEY ("talhaoID") REFERENCES "farm_data" ("dataID");
-
-ALTER TABLE "revenues_asset" ADD CONSTRAINT "FK_1722" FOREIGN KEY ("farmID") REFERENCES "farm" ("farmID");
-
-ALTER TABLE "revenues_asset" ADD CONSTRAINT "FK_175" FOREIGN KEY ("editedByUserID") REFERENCES "user" ("userID");
-
-ALTER TABLE "revenues_asset" ADD CONSTRAINT "FK_77" FOREIGN KEY ("producerID") REFERENCES "farm_data" ("dataID");
+-- create the order_items table
+CREATE TABLE order_items (
+  order_item_id SERIAL PRIMARY KEY,
+  order_id INTEGER NOT NULL,
+  crop_id INTEGER NOT NULL,
+  quantity NUMERIC NOT NULL,
+  price_per_unit NUMERIC NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_order
+    FOREIGN KEY (order_id)
+    REFERENCES orders (order_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_crop
+    FOREIGN KEY (crop_id)
+    REFERENCES crops (crop_id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
